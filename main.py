@@ -22,17 +22,23 @@ async def airPurifierCommand(
         else:
             channel = bot.get_channel(1252411440892215307)
 
-    voiceClient: discord.VoiceClient = await channel.connect(self_deaf=True)
+    voiceClient: discord.VoiceClient = ctx.voice_client
+    if not voiceClient:
+        voiceClient: discord.VoiceClient = await channel.connect(self_deaf=True)
 
-    loop = asyncio.get_event_loop()
+        loop = asyncio.get_event_loop()
 
-    def after(e: Exception):
-        asyncio.run_coroutine_threadsafe(voiceClient.disconnect(), loop=loop)
+        def after(e: Exception):
+            asyncio.run_coroutine_threadsafe(voiceClient.disconnect(), loop=loop)
 
-    voiceClient.play(
-        discord.FFmpegPCMAudio("./Air_Purifier01-mp3/Air_Purifier01-01(Mid).mp3"),
-        after=after,
-    )
+        voiceClient.play(
+            discord.FFmpegPCMAudio("./Air_Purifier01-mp3/Air_Purifier01-01(Mid).mp3"),
+            after=after,
+        )
+    else:
+        voiceClient.source = discord.FFmpegPCMAudio(
+            "./Air_Purifier01-mp3/Air_Purifier01-01(Mid).mp3"
+        )
 
 
 @bot.command(name="poweroff", aliases=["po"], description="スイッチオフ")
