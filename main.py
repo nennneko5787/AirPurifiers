@@ -17,10 +17,10 @@ async def airPurifierCommand(
     ctx: commands.Context, channel: discord.VoiceChannel = None
 ):
     if not channel:
-        channel = ctx.author.voice.channel
-
-    if not channel:
-        return
+        if ctx.author.voice.channel:
+            channel = ctx.author.voice.channel
+        else:
+            channel = bot.get_channel(1252411440892215307)
 
     voiceClient: discord.VoiceClient = await channel.connect(self_deaf=True)
 
